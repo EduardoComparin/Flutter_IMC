@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class FildText extends StatelessWidget {
   const FildText(
       {super.key,
+      required this.icon,
       required this.nomeController,
       required this.textColor,
       required this.corBorder,
       required this.corIcone,
       required this.hint});
 
+   final IconData icon;
   final TextEditingController nomeController;
   final Color? textColor;
   final Color corBorder;
@@ -30,7 +32,7 @@ class FildText extends StatelessWidget {
           hintText: hint,
           hintStyle: TextStyle(color: textColor),
           prefixIcon: Icon(
-            Icons.person_4_rounded,
+            icon,
             color: corIcone,
             size: 30,
           )),

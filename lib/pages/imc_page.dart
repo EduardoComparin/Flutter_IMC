@@ -59,6 +59,7 @@ class _ImcPageState extends State<ImcPage> {
                       height: 30,
                       alignment: Alignment.center,
                       child: FildText(
+                          icon: Icons.person_3_rounded,
                           nomeController: nomeController,
                           textColor: textColor,
                           corBorder: corBorder,

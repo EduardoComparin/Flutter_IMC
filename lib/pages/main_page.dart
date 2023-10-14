@@ -19,10 +19,10 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    obterTarefas();
+    obterImc();
   }
 
-  void obterTarefas() async {
+  void obterImc() async {
     _imc = await imcRepository.getList();
     setState(() {});
   }
@@ -45,7 +45,7 @@ class _MainPageState extends State<MainPage> {
                 },
                 children: [
                   ImcPage(imcRepository: imcRepository),
-                  ListImcPage(imc: _imc)
+                  ListImcPage(imc: _imc,imcRepository: imcRepository)
                 ],
               ),
             ),
