@@ -1,20 +1,33 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:flutter_imc/model/imc.dart';
+import 'package:flutter_imc/model/imc_model.dart';
 import 'package:flutter_imc/repositories/imc_repository.dart';
+import 'package:flutter_imc/util/imc_util.dart';
 
 class ListImcPage extends StatefulWidget {
-  const ListImcPage({Key? key, required this.imc, required this.imcRepository})
-      : super(key: key);
-  final ImcRepository imcRepository;
-  final List<Imc> imc;
-
+  const ListImcPage({Key? key}): super(key: key);
+ 
   @override
   State<ListImcPage> createState() => _ListImcPageState();
 }
 
 class _ListImcPageState extends State<ListImcPage> {
+
+  ImcRepository imcRepository = ImcRepository();
+  var _imc = const <ImcModel>[];
+
+  @override
+  void initState() {
+    super.initState();
+    obterImc();
+  }
+
+  void obterImc() async {
+    _imc = await imcRepository.get();
+    setState(() {});
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,13 +48,14 @@ class _ListImcPageState extends State<ListImcPage> {
             children: [
               Expanded(
                 child: ListView.builder(
-                    itemCount: widget.imc.length,
+                    itemCount: _imc.length,
                     itemBuilder: (BuildContext bc, int index) {
-                      var imc = widget.imc[index];
+                      var imc = _imc[index];
                       return Dismissible(
                          direction: DismissDirection.endToStart,
                         onDismissed: (DismissDirection dismissDirection) async {
-                          await widget.imcRepository.remove(imc.id);
+                          await imcRepository.delete(imc.id);
+                          obterImc();
                           setState(() {});
                         },
                         background: Container(
@@ -55,7 +69,7 @@ class _ListImcPageState extends State<ListImcPage> {
                             ),
                           ),
                         ),
-                        key: Key(imc.id),
+                        key: Key(imc.id.toString()),
                         child: ListTile(
                           isThreeLine: true,
                           title: Text(imc.nome,
@@ -65,7 +79,7 @@ class _ListImcPageState extends State<ListImcPage> {
                                 fontWeight: FontWeight.w200,
                               )),
                           subtitle: Text(
-                              "Altura: ${imc.altura}  Peso: ${imc.peso}\n${imc.resultado}",
+                              "Altura: ${imc.altura}M    Peso: ${imc.peso}Kg    Peso ideal ${ImcUtil.pesoIdeal(imc.altura)}Kg\n${imc.resultado}",
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,

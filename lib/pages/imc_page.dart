@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_imc/model/imc.dart';
+import 'package:flutter_imc/model/imc_model.dart';
 import 'package:flutter_imc/repositories/imc_repository.dart';
 import 'package:flutter_imc/shared/widgets/fild_heigth.dart';
 import 'package:flutter_imc/shared/widgets/fild_number.dart';
 import 'package:flutter_imc/shared/widgets/fild_text.dart';
+import 'package:flutter_imc/util/imc_util.dart';
 
 class ImcPage extends StatefulWidget {
-  const ImcPage({Key? key, required this.imcRepository}) : super(key: key);
-  final ImcRepository imcRepository;
+  const ImcPage({Key? key}) : super(key: key);
 
   @override
   State<ImcPage> createState() => _ImcPageState();
 }
 
 class _ImcPageState extends State<ImcPage> {
-  
+  ImcRepository imcRepository = ImcRepository();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Color corIcone = Colors.black;
   Color corBorder = Colors.black;
   Color? backgroundColor = Colors.white;
@@ -122,24 +128,30 @@ class _ImcPageState extends State<ImcPage> {
                   child: SizedBox(
                     width: double.infinity,
                     child: TextButton(
-                      onPressed: () {
-                        FocusScope.of(context).unfocus();
+                      onPressed: () async {
+                        FocusManager.instance.primaryFocus?.unfocus();
+
                         String nome = nomeController.text.trim();
-                        double peso = validaPeso();    
+                        double peso = validaPeso();
                         double altura = validaAltura();
 
                         if (peso > 0 && altura > 0 && nome != '') {
+                          double valorImc = ImcUtil.calcularIMC(peso, altura);
+                          String resultadoImc = ImcUtil.tipoImc(valorImc);
 
-                          Imc imc = insertImc(peso, altura, nome);
-                          
-                          pesoController.text ="";
-                          alturaController.text ="";
-                          nomeController.text ="";
+                          pesoController.text = "";
+                          alturaController.text = "";
+                          nomeController.text = "";
+
+                          showMsg(
+                              context,
+                              "Seu indice é de ${valorImc.toStringAsFixed(2)}",
+                              resultadoImc);
+
+                          await imcRepository.save(ImcModel(
+                              0, peso, altura, nome, valorImc, resultadoImc));
 
                           setState(() {});
-
-                          showMsg(context, "Seu indice é de ${imc.indice}",
-                              imc.resultado);
                         } else {
                           showMsg(context, "ATENÇÃO",
                               "INFORME OS DADOS CORRETAMENTE");
@@ -173,38 +185,20 @@ class _ImcPageState extends State<ImcPage> {
     );
   }
 
-  Imc insertImc(double peso, double altura, String nome) {
-    Imc imc = Imc(peso, altura, nome);
-
-    double indice = imc.calcularIMC();
-    String resultado = imc.tipoImc(indice);
-    
-    imc.indice = indice.toStringAsFixed(2);
-    imc.resultado = resultado;
-    
-    widget.imcRepository.insert(imc);
-    return imc;
-  }
-
   double validaAltura() {
-     String alturaText = alturaController.text == ''
-        ? '0,00'
-        : alturaController.text;
-    
-    
-    double altura = double.parse(alturaText
-            .replaceAll('.', '')
-            .replaceAll(',', '.'));
+    String alturaText =
+        alturaController.text == '' ? '0,00' : alturaController.text;
+
+    double altura =
+        double.parse(alturaText.replaceAll('.', '').replaceAll(',', '.'));
     return altura;
   }
 
   double validaPeso() {
-     String pesoText = pesoController.text == ''
-        ? '0,00'
-        : pesoController.text;
-    
-    double peso = double.parse(
-        pesoText.replaceAll('.', '').replaceAll(',', '.'));   
+    String pesoText = pesoController.text == '' ? '0,00' : pesoController.text;
+
+    double peso =
+        double.parse(pesoText.replaceAll('.', '').replaceAll(',', '.'));
     return peso;
   }
 
@@ -235,4 +229,3 @@ class _ImcPageState extends State<ImcPage> {
     );
   }
 }
-

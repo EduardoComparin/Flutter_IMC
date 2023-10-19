@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_imc/model/imc.dart';
 import 'package:flutter_imc/pages/Imc_list_page.dart';
 import 'package:flutter_imc/pages/imc_page.dart';
 import 'package:flutter_imc/repositories/imc_repository.dart';
@@ -13,18 +12,12 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   PageController controller = PageController(initialPage: 0);
-  var imcRepository = ImcRepository();
-  var _imc = const <Imc>[];
+
+  ImcRepository imcRepository = ImcRepository();
 
   @override
   void initState() {
     super.initState();
-    obterImc();
-  }
-
-  void obterImc() async {
-    _imc = await imcRepository.getList();
-    setState(() {});
   }
 
   int posicaoPagina = 0;
@@ -43,9 +36,9 @@ class _MainPageState extends State<MainPage> {
                     posicaoPagina = value;
                   });
                 },
-                children: [
-                  ImcPage(imcRepository: imcRepository),
-                  ListImcPage(imc: _imc,imcRepository: imcRepository)
+                children: const [
+                  ImcPage(),
+                  ListImcPage()
                 ],
               ),
             ),
