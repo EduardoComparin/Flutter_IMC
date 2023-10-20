@@ -1,5 +1,5 @@
 import 'package:flutter_imc/model/imc_model.dart';
-import 'package:flutter_imc/service/sqlitedatabase.dart';
+import 'package:flutter_imc/service/sqlite_data_base.dart';
 
 class ImcRepository {
   Future<List<ImcModel>> get() async {

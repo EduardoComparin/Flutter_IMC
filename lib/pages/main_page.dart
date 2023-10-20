@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_imc/pages/Imc_list_page.dart';
-import 'package:flutter_imc/pages/imc_page.dart';
+import 'package:flutter_imc/pages/configuration_page.dart';
+import 'package:flutter_imc/pages/imc_calculate_page.dart';
 import 'package:flutter_imc/repositories/imc_repository.dart';
 
 class MainPage extends StatefulWidget {
@@ -26,6 +27,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+ 
         body: Column(
           children: [
             Expanded(
@@ -38,7 +40,8 @@ class _MainPageState extends State<MainPage> {
                 },
                 children: const [
                   ImcPage(),
-                  ListImcPage()
+                  ListImcPage(),
+                  ConfiguracaoPage()
                 ],
               ),
             ),
@@ -60,8 +63,12 @@ class _MainPageState extends State<MainPage> {
                   ),
                   BottomNavigationBarItem(
                     label: "Listagem",
-                     tooltip: "Lista de Calculos",
+                     tooltip: "Lista de calculos",
                       icon: Icon(Icons.list,  color: Colors.black)),
+                   BottomNavigationBarItem(
+                    label: "Configuração",
+                     tooltip: "Lista de configuração",
+                      icon: Icon(Icons.add_task_rounded,  color: Colors.black)),    
                 ])
           ],
         ),

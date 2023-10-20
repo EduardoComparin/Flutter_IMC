@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_imc/model/imc_model.dart';
 import 'package:flutter_imc/repositories/imc_repository.dart';
+import 'package:flutter_imc/service/storage_service.dart';
 import 'package:flutter_imc/shared/widgets/fild_heigth.dart';
 import 'package:flutter_imc/shared/widgets/fild_number.dart';
 import 'package:flutter_imc/shared/widgets/fild_text.dart';
@@ -14,11 +15,28 @@ class ImcPage extends StatefulWidget {
 }
 
 class _ImcPageState extends State<ImcPage> {
+  StorageService storage = StorageService();
   ImcRepository imcRepository = ImcRepository();
 
   @override
   void initState() {
     super.initState();
+    carregarDadosCalculadora();
+  }
+
+  carregarDadosCalculadora() async {
+    double altura = await (storage.getConfiguracaoAltura());
+    String nome = await storage.getConfiguracaoNome();
+
+    if (altura > 0) {
+      alturaController.text = altura.toString().replaceAll(".", ",");
+    }
+
+    if (nome != "") {
+      nomeController.text = nome;
+    }
+
+    setState(() {});
   }
 
   Color corIcone = Colors.black;
@@ -151,7 +169,7 @@ class _ImcPageState extends State<ImcPage> {
                           await imcRepository.save(ImcModel(
                               0, peso, altura, nome, valorImc, resultadoImc));
 
-                          setState(() {});
+                          carregarDadosCalculadora();
                         } else {
                           showMsg(context, "ATENÇÃO",
                               "INFORME OS DADOS CORRETAMENTE");

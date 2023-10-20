@@ -43,13 +43,13 @@ class _ListImcPageState extends State<ListImcPage> {
             )),
         backgroundColor: Colors.white,
         body: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
           child: Column(
             children: [
               Expanded(
                 child: ListView.builder(
                     itemCount: _imc.length,
-                    itemBuilder: (BuildContext bc, int index) {
+                    itemBuilder: (BuildContext context, int index) {
                       var imc = _imc[index];
                       return Dismissible(
                          direction: DismissDirection.endToStart,
